@@ -1,0 +1,179 @@
+<!--基于任务四进行升级-->
+<!--将新元素输入框从input改为textarea-->
+<!--允许一次批量输入多个内容，格式可以为数字、中文、英文等，可以通过用回车，逗号（全角半角均可），顿号，空格（全角半角、Tab等均可）等符号作为不同内容的间隔-->
+<!--增加一个查询文本输入框，和一个查询按钮，-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The tools of string</title>
+    <style type="text/css">
+        #enterPart{
+            vertical-align:middle;
+            margin-left:30%;
+            margin-right:30%;
+        }
+        form {
+            position: absolute;
+            float: left;
+        }
+        #enterButton{
+            padding-left:180px;
+        }
+        #queue{
+            height: 150px;
+            margin: 20px;
+        }
+        #queue span{
+            color: white;
+            background-color: red;
+            margin: 5px;
+            display: inline-block;
+            vertical-align:middle;
+            cursor: pointer;
+        }
+        button{
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        #searchPart {
+            padding-left:30%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="enterPart">
+<form>
+    <label>
+        <textarea id="input" placeholder="输入想要插入的数据" rows="4" rel="45"></textarea>
+    </label>
+</form>
+    <div id="enterButton">
+        <button id="leftIn">左边插入</button>
+        <button id="rightIn">右边插入</button>
+        <button id="leftDe">左边删除</button>
+        <button id="rightDe">右边删除</button>
+    </div>
+</div>
+<div id="searchPart">
+    <label>
+        <input id="search-input" placeholder="输入想要查找的数据">
+    </label>
+    <button id="search-btn">查找</button>
+    <button id="clear-btn">清空</button>
+</div>
+<div id="queue"></div>
+<script type="text/javascript">
+    var myQueue=document.getElementById('queue');
+    //左输入
+    function leftInter(){
+        var myInput=document.getElementById('input').value;
+        var mySpan=document.createElement("span");
+        //判断输入内容是否输入
+        if(myInput===""){
+                alert("未输入任何数,请输入数字");
+            }
+        else{
+            //mySpan获得数据;插入在myQueue
+            mySpan.innerHTML=myInput.toString();
+            myQueue.insertBefore(mySpan,myQueue.firstChild);
+            }
+        }
+    //右输入
+    function rightInter(){
+        var myInput=document.getElementById('input').value;
+        var mySpan=document.createElement("span");
+        //判断输入内容是否输入
+        if(myInput===""){
+                alert("未输入任何数,请输入数字");
+            }
+        else{
+            //mySpan获得数据;插入在myQueue
+            mySpan.innerHTML=myInput.toString();
+            myQueue.appendChild(mySpan);
+            }
+        }
+
+
+    //进行左边删除;右边删除
+    function leftDelete(){
+        var node=myQueue.removeChild(myQueue.firstChild);
+
+        alert("已删除"+node.innerText);
+    }
+    function rightDelete(){
+        var node=myQueue.removeChild(myQueue.lastChild);
+
+        alert("已删除"+node.innerText);
+    }
+    //搜索内容的匹配
+    var select=document.getElementById('search-input');
+    var searchBtn=document.getElementById('search-btn');
+    searchBtn.addEventListener('click',function(){
+        var list=myQueue.childNodes;
+        var space=/^\s+$/;
+        if(list.length<=0){
+            alert("未输入内容");
+        }
+        else if(select.value===""||space.test(select.value)){
+            alert("输入内容为空,重新输入")
+        }
+        else{
+            var ishave=false;
+        var regexSelect = new RegExp(select.value+"+");
+        for(var i=0; i<list.length; i++){
+            if(regexSelect.test(list[i].innerHTML)){
+                list[i].setAttribute("style", "color: #6af318;");
+                ishave = true;
+            }else{
+                list[i].removeAttribute("style");
+            }
+        }
+        ishave?alert("已高亮显示你要查找的内容！"):alert("你要查找的内容不在列表里！");
+        }
+    })
+
+    <!------------------------------------------------------上为操作函数,下为绑定事件    -->
+    //绑定4个按钮
+    function initLeftIn() {
+        var btn = document.getElementById('leftIn');
+        btn.addEventListener('click',function(){
+            leftInter();
+            //          btn.disabled = "true";//让button失效
+        })
+    }
+    function initRightIn() {
+        var btn = document.getElementById('rightIn');
+        btn.addEventListener('click',function(){
+            rightInter();
+//            btn.disabled = "true";//让button失效
+        })
+    }
+    function initLeftDe() {
+        var btn = document.getElementById('leftDe');
+        btn.addEventListener('click',function(){
+            leftDelete();
+//      //      btn.disabled = "true";//让button失效
+        })
+    }
+    function initRightDe() {
+        var btn = document.getElementById('rightDe');
+        btn.addEventListener('click',function(){
+            rightDelete();
+//      //      btn.disabled = "true";//让button失效
+        })
+    }
+    //点击文中元素会被删除
+    myQueue.addEventListener('click',function(){
+        if(event.target.nodeName.toLowerCase()==="span"){
+            myQueue.removeChild(event.target);
+        }
+    });
+    initLeftIn();
+    initRightIn();
+    initLeftDe();
+    initRightDe();
+</script>
+</body>
+</html>
